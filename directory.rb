@@ -9,8 +9,10 @@ def input_students
   name = gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
+    puts "Please enter the student's country"
+    country = gets.chomp
     # add the student hash to the array
-    students << {name: name, cohort: :november}
+    students << {name: name, cohort: :november, country: country, language: :ruby}
     puts "Now we have #{students.count} students"
     # get another name from the user
     name = gets.chomp
@@ -24,16 +26,6 @@ def print_header
   puts "-------------"
 end
 
-# def print(students)
-#   puts "Please choose an initial"
-#   # gets initial
-#   initial = gets.chomp.upcase
-#   students.each_with_index do |student, index|
-#     if student[:name].start_with?(initial) && student[:name].length < 12
-#     puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
-#     end
-#   end
-# end
 
 def print(students)
   puts "Please choose an initial"
@@ -41,12 +33,11 @@ def print(students)
   initial = gets.chomp.upcase
   students.each_with_index do |student, index|
     while student[:name].start_with?(initial) && student[:name].length < 12
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+        puts "#{index + 1}. #{student[:name]} from #{student[:country]} learning #{student[:language]} (#{student[:cohort]} cohort)"
         break
     end
   end
 end
-
 
 
 def print_footer(names)
