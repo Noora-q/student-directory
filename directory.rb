@@ -31,7 +31,7 @@ end
 def print_header
   puts "The students of Villains Academy".center(60)
   puts "-------------".center(60)
-  puts "Please choose an initial".center(60)
+  puts "Please type an initial or press enter to see all students".center(60)
   # gets initial
   @initial = gets.chomp.upcase
 end
@@ -47,6 +47,8 @@ def print(students)
   # sorts students by cohort
   sorted = students.group_by{|student| student[:cohort]}
   # puts sorted.map {|cohort,student| "#{student}"}.join(', ')
+  # puts "which cohort?"
+  # choice = gets.chomp
   puts sorted
 end
 
@@ -58,9 +60,35 @@ def print_footer(names)
   end
 end
 
-students = input_students
-# nothing happens until we call the methods
-print_header
-print(students)
-# sorted = input_students.group_by{|student| student[:cohort]}
-print_footer(students)
+# students = input_students
+# # nothing happens until we call the methods
+# print_header
+# print(students)
+# print_footer(students)
+
+def interactive_menu
+  students = []
+  loop do
+    # 1. print the menu and ask the user what to do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit" # 9 because we'll be adding more items
+    # 2. read the input and save it into a variable
+    selection = gets.chomp
+    # 3. do what the user has asked
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header
+      print(students)
+      print_footer(students)
+    when "9"
+      exit # this will cause the program to terminate
+    else
+      puts "I don't know what you meant, try again"
+    end
+  end
+end
+
+interactive_menu
