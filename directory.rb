@@ -60,7 +60,7 @@ def save_students
     file.puts csv_line
   end
   file.close
-  puts "Saved!"
+  puts "Saved"
 end
 
 def process(selection)
