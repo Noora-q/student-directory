@@ -8,7 +8,6 @@ def input_students
   name = gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
-<<<<<<< HEAD
     puts "Please provide cohort (month)".center(60)
     cohort = gets.chomp.capitalize || "Unkown"
     puts "Please enter the student's country".center(60)
@@ -21,21 +20,6 @@ def input_students
     else
       puts "Now we have #{@students.count} students".center(60)
     end
-=======
-    puts "Please provide cohort (month).".center(60)
-    cohort = gets.chomp.capitalize! || "Unknown"
-    puts "Please enter the student's country".center(60)
-    country = gets.chomp.capitalize!
-    # add the student hash to the array
-    students << {name: name, cohort: cohort, country: country, language: :Ruby}
-
-    if students.count == 1
-      puts "Now we have #{students.count} student".center(60)
-    else
-      puts "Now we have #{students.count} students".center(60)
-    end
-
->>>>>>> 380b7a7efad67a4c6a0d595157a9abc0ae2c5984
     # get another name from the user
     name = gets.chomp
   end
@@ -77,7 +61,7 @@ def save_students
     file.puts csv_line
   end
   file.close
-  puts "Saved"
+  puts "Saved!"
 end
 
 def load_students
@@ -111,24 +95,16 @@ end
 def print_header
   puts "The students of Villains Academy".center(60)
   puts "-------------".center(60)
-<<<<<<< HEAD
   puts "Please type an initial or press enter to see all students".center(60)
   # gets initial from user
-=======
   puts "Please choose an initial".center(60)
   # gets initial
->>>>>>> 380b7a7efad67a4c6a0d595157a9abc0ae2c5984
   @initial = gets.chomp.upcase
 end
 
 
-<<<<<<< HEAD
 def print_student_list
   @students.each_with_index do |student, index|
-=======
-def print(students)
-  students.each_with_index do |student, index|
->>>>>>> 380b7a7efad67a4c6a0d595157a9abc0ae2c5984
     while student[:name].start_with?(@initial) && student[:name].length < 12
         puts "#{index + 1}. #{student[:name]} from #{student[:country]} learning #{student[:language]} (#{student[:cohort]} cohort)".center(60)
     break
@@ -142,27 +118,13 @@ def print(students)
   puts sorted
 end
 
-# puts "For which cohort would you like to see the list of students?"
-# cohort_choice = gets.chomp.capitalize!
-# while student[:cohort] == cohort_choice
-#   puts "#{student[:name]}"
-# end
 
-<<<<<<< HEAD
 def print_footer
   if @students.count == 1
     puts "Overall, we have #{@students.count} great student".center(60)
   else
     puts "Overall, we have #{@students.count} great students".center(60)
-=======
-def print_footer(names)
-  if names.count == 1
-    puts "Overall, we have #{names.count} great student".center(60)
-  else
-    puts "Overall, we have #{names.count} great students".center(60)
->>>>>>> 380b7a7efad67a4c6a0d595157a9abc0ae2c5984
   end
 end
-
 
 interactive_menu
