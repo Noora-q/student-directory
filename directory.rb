@@ -107,9 +107,9 @@ def print_footer
 end
 
 def save_students
-puts "Enter the name of the file to which you would like to save the students' details".center(60)
-filename = STDIN.gets.chomp
-filename = "students.csv" if filename.empty?
+  puts "Enter the name of the file to which you would like to save the students' details".center(60)
+  filename = STDIN.gets.chomp
+  filename = "students.csv" if filename.empty?
   # open the file for writing
   CSV.open(filename, "a+") do |file|
   # iterate over the array of students
@@ -123,10 +123,10 @@ filename = "students.csv" if filename.empty?
 end
 
 def load_students(filename = "students.csv")
-puts "Enter the name of the file from which you would like to load the students' details".center(60)
-filename = STDIN.gets.chomp
-filename = "students.csv" if filename.empty?
-CSV.foreach(filename) do |line|
+  puts "Enter the name of the file from which you would like to load the students' details".center(60)
+  filename = STDIN.gets.chomp
+  filename = "students.csv" if filename.empty?
+  CSV.foreach(filename) do |line|
     name,cohort,country = line
     add_to_students(name,cohort,country)
   end
