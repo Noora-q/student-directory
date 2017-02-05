@@ -1,12 +1,18 @@
+puts File.read(__FILE__)
 
+require 'csv'
 @students = [] # an empty array accessible to all methods
+
+def add_to_students(name,cohort,country)
+  @students << {name: name, cohort: cohort.to_sym, country: country, language: :Ruby}
+end
 
 def print_menu
   # 1. print the menu and ask the user what to do
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list"
+  puts "4. Load the list"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -21,38 +27,46 @@ end
 def process(selection)
   case selection
   when "1"
+    puts "You have chosen to provide the students' details, please follow the instructions".center(60)
+    puts "To finish, just hit return twice".center(60)
     input_students
   when "2"
+    puts "You have chosen to display the students' details".center(60)
     show_students
   when "3"
     save_students
+    puts "Students' details have been saved".center(60)
   when "4"
     load_students
+    puts "Loaded students' details, to see them select 2".center(60)
   when "9"
+    puts "Bye!".center(60)
     exit # this will cause the program to terminate
   else
-    puts "I don't know what you meant, try again"
+    puts "I don't know what you meant, try again".center(60)
   end
 end
 
 def input_students
-  puts "Please enter the names of the students".center(60)
-  puts "To finish, just hit return twice".center(60)
+  puts "First, enter the name of the student".center(60)
   # get the first name
   name = STDIN.gets.chomp
+  name = "Unknown" if name.empty?
   # while the name is not empty, repeat this code
   while !name.empty? do
     puts "Please provide cohort (month)".center(60)
-    cohort = STDIN.gets.chomp.capitalize || "Unkown"
-    # puts "Please enter the student's country".center(60)
-    # country = STDIN.gets.chomp.capitalize!
+    cohort = STDIN.gets.chomp.capitalize.to_sym
+    cohort = "Unknown".to_sym if cohort.empty?
+    puts "Please enter the student's country".center(60)
+    country = STDIN.gets.chomp.capitalize
     # # add the student hash to the array
-    @students << {name: name, cohort: cohort, country: :country, language: :Ruby}
+    add_to_students(name,cohort,country)
+    puts "Added student details!"
 
     if @students.count == 1
-      puts "Now we have #{@students.count} student".center(60)
+      puts "Now we have #{@students.count} student, add another name or hit enter to end".center(60)
     else
-      puts "Now we have #{@students.count} students".center(60)
+      puts "Now we have #{@students.count} students, add another name or hit enter to end".center(60)
     end
     # get another name from the user
     name = STDIN.gets.chomp
@@ -68,30 +82,21 @@ end
 def print_header
   puts "The students of Villains Academy".center(60)
   puts "-------------".center(60)
-  puts "Please type an initial or press enter to see all students".center(60)
+  puts "Please type an initial or hit return to see all students".center(60)
   # gets initial from user
-  puts "Please choose an initial".center(60)
-  # gets initial
   @initial = STDIN.gets.chomp.upcase
 end
 
-
 def print_student_list
-  @students.each_with_index do |student, index|
-    while student[:name].start_with?(@initial) && student[:name].length < 12
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(60)
-        # puts "#{index + 1}. #{student[:name]} from #{student[:country]} learning #{student[:language]} (#{student[:cohort]} cohort)".center(60)
-    break
+  if @students.count >= 1
+    @students.sort_by{|student| student[:cohort]}.each_with_index do |student, index|
+      while student[:name].start_with?(@initial) && student[:name].length < 12
+        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort) from #{student[:country]} studying #{student[:language]}".center(60)
+        break
+      end
     end
   end
-  # sorts students by cohort
-  sorted = @students.group_by{|student| student[:cohort]}
-  # puts sorted.map {|cohort,student| "#{student}"}.join(', ')
-  # puts "which cohort?"
-  # choice = gets.chomp
-  puts sorted
 end
-
 
 def print_footer
   if @students.count == 1
@@ -102,25 +107,29 @@ def print_footer
 end
 
 def save_students
+puts "Enter the name of the file to which you would like to save the students' details".center(60)
+filename = STDIN.gets.chomp
+filename = "students.csv" if filename.empty?
   # open the file for writing
-  file = File.open("students.csv", "w")
+  CSV.open(filename, "a+") do |file|
   # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:country]]
+      csv_line = student_data.join(",")
+      file << student_data #csv_line
+    end
   end
-  file.close
   puts "Saved!"
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-      @students << {name: name, cohort: cohort.to_sym}
-    end
-    file.close
+puts "Enter the name of the file from which you would like to load the students' details".center(60)
+filename = STDIN.gets.chomp
+filename = "students.csv" if filename.empty?
+CSV.foreach(filename) do |line|
+    name,cohort,country = line
+    add_to_students(name,cohort,country)
+  end
 end
 
 def try_load_students
@@ -128,13 +137,12 @@ def try_load_students
   return if filename.nil? # get out of the method if it isn't given
   if File.exists?(filename) # if it exists
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
+    puts "Loaded #{@students.count} from #{filename}".center(60)
   else # if it doesn't exist
-    puts "Sorry, #{filename} doesn't exist."
+    puts "Sorry, #{filename} doesn't exist.".center(60)
     exit # quit the program
   end
 end
-
 
 try_load_students
 interactive_menu
